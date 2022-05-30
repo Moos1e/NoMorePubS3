@@ -5,9 +5,11 @@ import time
 s3 = boto3.resource('s3')
 client = boto3.client('s3')
 
+
+
 session = boto3.Session(
-    aws_access_key_id=<key>,
-    aws_secret_access_key=<secret>
+    aws_access_key_id="key", #Key goes here
+    aws_secret_access_key="secret" 
 )
 s3 = boto3.client('s3')
 
@@ -29,14 +31,13 @@ target = input("What bucket would you like to inspect?\n Insert bucket name here
 
  
 try:
-    access = s3.get_public_access_block(Bucket='target')
+    access = s3.get_public_access_block(Bucket='moosepub')
     print (access)
-except botocore.exceptions.ClientError as a:
-    if a.response['Error']['Code'] == 'NoSuchPublicAccessBlockConfiguration':
+except botocore.exceptions.ClientError as e:
+    if e.response['Error']['Code'] == 'NoSuchPublicAccessBlockConfiguration':
         print('\t no Public Access')
     else:
         print("unexpected error: %s" % (e.response))
-
 #Disable Public Access
 time.sleep(2)
 print("\n*** Disabling Public Access To " +target+ " ***")
@@ -47,8 +48,8 @@ time.sleep(2)
 
 def main():
     # Create the boto Session from the profile stored on the host
-    mySesh = boto3.Session(profile_name=target)
-    s3client = mySesh.client('s3')
+    sesh = boto3.Session(profile_name='default')
+    s3client = sesh.client('s3')
     # Get the list of all your buckets
     allbuckets = s3client.list_buckets()
     # Iterate over the list
@@ -71,3 +72,6 @@ def main():
 #Advise User that Buckets are no longer public
 
 print("\nBuckets with the AWS environment are no longer public. Please sign into your AWS account and review contents and purpose of all S3 buckets" )
+
+if __name__== "__main__":
+    main()
