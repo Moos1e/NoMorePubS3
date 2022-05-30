@@ -29,7 +29,7 @@ target = input("What bucket would you like to inspect?\n Insert bucket name here
 
  
 try:
-    access = s3.get_public_access_block(Bucket='moosepub')
+    access = s3.get_public_access_block(Bucket='target')
     print (access)
 except botocore.exceptions.ClientError as a:
     if a.response['Error']['Code'] == 'NoSuchPublicAccessBlockConfiguration':
